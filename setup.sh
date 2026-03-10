@@ -40,9 +40,11 @@ fi
 
 if [ -n "$TIMEZONE" ]; then
   sed -i.bak "s|TIMEZONE_PLACEHOLDER|$TIMEZONE|" CLAUDE.md && rm -f CLAUDE.md.bak
+  # Also replace timezone placeholder in skill files
+  find .claude/skills -name "SKILL.md" -exec sed -i.bak "s|TIMEZONE_PLACEHOLDER|$TIMEZONE|" {} \; -exec rm -f {}.bak \;
   echo "Timezone configured: $TIMEZONE"
 else
-  echo "Warning: Could not detect timezone. Please update CLAUDE.md manually."
+  echo "Warning: Could not detect timezone. Please update CLAUDE.md and skill files manually."
 fi
 
 # Configure GitHub Actions write permissions (needed for auto-merge workflow)

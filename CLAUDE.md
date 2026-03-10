@@ -45,6 +45,7 @@ When the user sends a piece of text, thought, information, or idea:
 ---
 date: YYYY-MM-DD
 created: "HH:MM"
+type: note
 summary: 1-2 sentence summary of the note's core content, enabling quick scanning and progressive exploration.
 ---
 
@@ -58,6 +59,7 @@ summary: 1-2 sentence summary of the note's core content, enabling quick scannin
 - **YAML frontmatter** at the top with:
   - `date`: the date of the note
   - `created`: the time it was created (use the timezone specified in Config above). Get the current time with `TZ='<timezone>' date '+%H:%M'`.
+  - `type`: one of `note` (default), `idea`, `reflection`, `learning`, `meeting`, `link`, `observation`, `todo` — classifies the content for filtering and analysis
   - `summary`: 1-2 sentence summary of the note's core content — this enables **progressive exploration** (scan summaries first, then load full content only when needed)
 - **One topic per file** — if the user sends multiple unrelated items, create separate files
 - **Related items can be grouped** — if several entries are about the same topic, combine them into one file with sections
@@ -78,6 +80,7 @@ When the user sends an image:
 ---
 date: YYYY-MM-DD
 created: "HH:MM"
+type: observation
 summary: 1-2 sentence summary of the image content.
 ---
 
@@ -103,6 +106,7 @@ When the user sends a URL/link:
 ---
 date: YYYY-MM-DD
 created: "HH:MM"
+type: link
 summary: 1-2 sentence summary of the link content and why it was saved.
 ---
 
@@ -128,7 +132,7 @@ The user may ask Claude to explore raw notes through a specific lens or theme, e
 
 When this happens:
 
-1. **Progressive exploration**: First scan the frontmatter summaries of relevant `notes/` files (by date range and filename), then load full content only for the most relevant notes
+1. **Progressive exploration**: First scan the frontmatter summaries of relevant `notes/` files (by date range, filename, and `type` field), then load full content only for the most relevant notes
 2. Analyze and synthesize the raw content through the requested lens
 3. Create a new file in `explorations/` named: `YYYY-MM-DD_topic-slug.md`
    - The date is the date the exploration was created (not the source notes' dates)
@@ -152,7 +156,7 @@ When this happens:
 
 ## Commit Messages
 
-Format: `note: <brief summary>` or `explore: <brief summary>`
+Format: `note: <brief summary>`, `idea: <brief summary>`, `todo: <brief summary>`, `reflect: <brief summary>`, or `explore: <brief summary>`
 
 ## Purpose
 

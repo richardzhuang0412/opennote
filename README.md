@@ -71,6 +71,40 @@ claude "Asymmetry is the whole game when the future is uncertain."
 
 Or open Claude on your phone and just start talking.
 
+## Capture from Anywhere
+
+Set up a shell alias for even faster capture:
+
+```bash
+# Add to your .bashrc or .zshrc
+alias n='claude --allowedTools "" -p'
+```
+
+Then capture from anywhere:
+
+```bash
+n "the best ideas feel obvious in retrospect"
+```
+
+### Skills
+
+OpenNote ships with built-in skills for different types of capture:
+
+| Command | What it does |
+|---------|-------------|
+| `/dump` | Ultra-fast raw capture — no formatting, no questions |
+| `/idea` | Structured idea with Potential and Next Steps sections |
+| `/reflect` | Periodic reflection that surfaces themes from recent notes |
+| `/todo` | Task capture with optional scheduled reminders |
+
+Use them inside Claude Code:
+
+```
+claude> /idea a marketplace for unused SaaS seats
+claude> /todo finish the API docs by Friday
+claude> /reflect what have I been thinking about this week?
+```
+
 ## How It Works
 
 ```
