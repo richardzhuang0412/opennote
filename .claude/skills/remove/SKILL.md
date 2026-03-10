@@ -26,9 +26,13 @@ Find and delete a note that's outdated, wrong, or no longer needed.
    head -6 notes/<match1>.md notes/<match2>.md
    ```
 
-3. **Ask the user to confirm** which note(s) to delete. Never delete without confirmation.
+3. **Confirmation behavior depends on context:**
 
-4. Once confirmed, delete + commit + push in one call:
+   - **Interactive mode** (`notei` / `claude`): Ask the user to confirm which note(s) to delete. Wait for their response.
+   - **One-shot mode** (`note` / `claude -p`): If there is **exactly one match**, show its title and summary and delete it directly. If there are **multiple matches**, list them all with summaries and tell the user: "Multiple matches found. Run `notei` to pick which one to delete." Do NOT delete when ambiguous.
+   - **Exact filename given** (e.g., `/remove 2026-03-10_flossing.md`): Delete it directly without searching.
+
+4. Once confirmed (or auto-confirmed per above), delete + commit + push in one call:
 
    ```bash
    rm notes/<filename>.md && \
@@ -37,7 +41,7 @@ Find and delete a note that's outdated, wrong, or no longer needed.
 
 ## Rules
 
-- **Always confirm before deleting** — show the note title and summary first
-- If multiple matches, list them and let the user pick
+- **Never delete when ambiguous in one-shot mode** — list matches and direct user to interactive mode
+- In interactive mode, always confirm before deleting
 - If no matches found, say so and suggest alternative search terms
 - Keep output concise — just filenames and summaries, not full content

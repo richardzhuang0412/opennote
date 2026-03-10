@@ -82,11 +82,10 @@ OpenNote ships with built-in skills for different types of capture:
 **You don't need to remember commands.** Just send your content naturally — AI detects your intent and routes it automatically:
 
 ```bash
-n "the best frameworks feel invisible"           # → captured as a note
-n "what if we sold unused SaaS seats"             # → captured as an idea with next steps
-n "finish the API docs by Friday"                 # → captured as a todo
-n "what did I say about marketplaces?"            # → searches your notes
-n "delete that note about flossing"               # → finds and removes it (with confirmation)
+note "the best frameworks feel invisible"           # → captured as a note
+note "what if we sold unused SaaS seats"             # → captured as an idea with next steps
+note "finish the API docs by Friday"                 # → captured as a todo
+note "what did I say about marketplaces?"            # → searches your notes
 ```
 
 Skills can also be invoked explicitly if you prefer:
@@ -100,26 +99,30 @@ Skills can also be invoked explicitly if you prefer:
 | `/search` | Find a half-remembered idea or note by keyword, theme, or date |
 | `/remove` | Delete a note that's outdated or no longer needed |
 
+### Shell aliases
+
+Add these to your `.bashrc` or `.zshrc`:
+
 ```bash
-n "/idea a daily email digest of your own notes"
-n "/todo remind me to call Alex in 30 minutes"
-n "/search that API thing from last week"
+alias note='cd ~/opennote && claude -p'    # one-shot: capture, search, quick actions
+alias notei='cd ~/opennote && claude'      # interactive: multi-turn conversations
 ```
 
-### Shell alias
+**`note`** is one-shot — send a thought, get it captured, done. Perfect for quick capture, search, and todos.
 
-For even faster capture, add an alias to your `.bashrc` or `.zshrc`:
-
-```bash
-alias n='cd ~/opennote && claude -p'
-```
-
-Then:
+**`notei`** opens an interactive session — use it for multi-turn workflows like `/remove` (which needs confirmation when there are multiple matches), `/reflect`, or exploring your notes in conversation.
 
 ```bash
-n "/dump always bet on simplicity"
-n "/idea a daily email digest of your own notes"
-n "meeting with Alex — discussed launch timeline, agreed on March 20"
+# One-shot (note)
+note "always bet on simplicity"
+note "remind me to call Alex in 30 minutes"
+note "/search that API thing from last week"
+
+# Interactive (notei)
+notei                          # opens a session
+> delete that note about flossing
+> what patterns do you see in my notes this week?
+> /reflect
 ```
 
 ### Zero permission prompts
