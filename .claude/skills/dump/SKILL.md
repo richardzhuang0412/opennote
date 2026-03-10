@@ -10,32 +10,31 @@ Capture the user's content as fast as possible with minimal processing.
 
 ## Instructions
 
-1. Get the current date and time:
-   ```
-   TZ='TIMEZONE_PLACEHOLDER' date '+%Y-%m-%d %H:%M'
-   ```
-2. Determine a short topic slug from the content
-3. Create `notes/YYYY-MM-DD_topic-slug.md` with this format:
+**Do everything in a single Bash call.** Minimize tool calls for speed.
 
-```markdown
+1. Determine a short topic slug and summary from the content
+2. Run **one** Bash command that does it all:
+
+```bash
+DATE=$(TZ='TIMEZONE_PLACEHOLDER' date '+%Y-%m-%d') && \
+TIME=$(TZ='TIMEZONE_PLACEHOLDER' date '+%H:%M') && \
+FILE="notes/${DATE}_<topic-slug>.md" && \
+cat > "$FILE" <<'NOTEEOF'
 ---
-date: YYYY-MM-DD
-created: "HH:MM"
+date: <DATE>
+created: "<TIME>"
 type: note
-summary: <one sentence max — just enough to identify the content later>
+summary: <one sentence max>
 ---
 
 # <Short Title>
 
-<user's content exactly as provided — no embellishment, no restructuring>
+<user's content exactly as provided>
+NOTEEOF
+git add "$FILE" && git commit -m "note: <2-4 word summary>" && git push &
 ```
 
-4. Commit and push:
-   ```
-   git add notes/YYYY-MM-DD_topic-slug.md
-   git commit -m "note: <2-4 word summary>"
-   git push
-   ```
+Note: the heredoc content should use the actual values, not the placeholders. Construct the file content with the real date, time, summary, and user content.
 
 ## Rules
 
@@ -43,4 +42,5 @@ summary: <one sentence max — just enough to identify the content later>
 - **No questions** — do not ask the user anything, just capture
 - **Minimal summary** — one sentence max, keep it short
 - **Preserve exact wording** — do not rephrase or restructure
-- **Fast** — no unnecessary steps or output
+- **Fast** — one Bash call for the whole operation, push in background
+- **Minimal output** — just confirm the note was captured, nothing more
