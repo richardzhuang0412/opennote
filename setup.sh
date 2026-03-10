@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+FORCE_PRIVATE=false
+for arg in "$@"; do
+  case "$arg" in
+    --private) FORCE_PRIVATE=true ;;
+  esac
+done
+
 echo "Setting up OpenNote..."
 
 # Check prerequisites
@@ -25,18 +32,32 @@ if ! git rev-parse --is-inside-work-tree &> /dev/null; then
   exit 1
 fi
 
-# Detect if this is still pointing to the template repo
+# Detect if this repo needs a private remote
 ORIGIN_URL=$(git remote get-url origin 2>/dev/null || true)
-IS_TEMPLATE=false
+NEEDS_PRIVATE=false
 
-if echo "$ORIGIN_URL" | grep -q "ryannli/opennote"; then
-  IS_TEMPLATE=true
+if [ "$FORCE_PRIVATE" = true ]; then
+  NEEDS_PRIVATE=true
+elif echo "$ORIGIN_URL" | grep -q "ryannli/opennote"; then
+  # Still pointing to the original template
+  NEEDS_PRIVATE=true
+else
+  # Check if current origin is a public repo (notes would be exposed)
+  REPO_VISIBILITY=$(gh repo view --json isPrivate -q '.isPrivate' 2>/dev/null || echo "unknown")
+  if [ "$REPO_VISIBILITY" = "false" ]; then
+    echo ""
+    echo "Warning: Your origin repo is public — your notes would be visible to everyone."
+    read -p "Create a new private repo instead? [Y/n] " CONFIRM
+    CONFIRM=${CONFIRM:-Y}
+    if [[ "$CONFIRM" =~ ^[Yy] ]]; then
+      NEEDS_PRIVATE=true
+    fi
+  fi
 fi
 
-# If still pointing to template, create a private repo and switch remote
-if [ "$IS_TEMPLATE" = true ]; then
+# If needed, create a private repo and switch remote
+if [ "$NEEDS_PRIVATE" = true ]; then
   echo ""
-  echo "This repo is still linked to the public template."
   echo "Creating a private repo for your notes..."
   echo ""
 
