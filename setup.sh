@@ -65,21 +65,26 @@ if [ "$NEEDS_PRIVATE" = true ]; then
   read -p "Repo name (default: opennote): " REPO_NAME
   REPO_NAME=${REPO_NAME:-opennote}
 
+  # Rename current origin to upstream before creating new repo
+  if git remote get-url upstream &>/dev/null; then
+    # upstream already exists, just remove origin
+    git remote remove origin 2>/dev/null || true
+  else
+    git remote rename origin upstream 2>/dev/null || true
+  fi
+
   # Create private repo on GitHub
   if gh repo view "$REPO_NAME" &>/dev/null 2>&1; then
     echo "Repo $REPO_NAME already exists. Switching remote..."
     NEW_URL=$(gh repo view "$REPO_NAME" --json url -q '.url')
+    git remote add origin "$NEW_URL"
   else
     echo "Creating private repo: $REPO_NAME"
     gh repo create "$REPO_NAME" --private --source=. --push
-    NEW_URL=$(gh repo view "$REPO_NAME" --json url -q '.url')
   fi
 
-  # Keep template as upstream for future updates
-  git remote rename origin upstream 2>/dev/null || true
-  git remote add origin "$NEW_URL" 2>/dev/null || git remote set-url origin "$NEW_URL"
   git push -u origin main
-  echo "Remote switched to private repo: $NEW_URL"
+  echo "Remote switched to private repo."
   echo "Template kept as 'upstream' — pull updates with: git pull upstream main"
 fi
 
