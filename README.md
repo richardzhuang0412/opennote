@@ -58,10 +58,12 @@ Ask it to brainstorm, and it doesn't start from zero. It draws on everything you
 > Expects [Claude Code](https://docs.anthropic.com/en/docs/claude-code) and [GitHub CLI (`gh`)](https://cli.github.com/) installed.
 
 ```bash
-gh repo fork ryannli/opennote --clone
-cd opennote
+git clone https://github.com/ryannli/opennote.git my-notes
+cd my-notes
 ./setup.sh
 ```
+
+Setup will automatically create a **private** GitHub repo for your notes and switch the remote. Your notes never touch a public repo. The original template is kept as `upstream` so you can pull future updates with `git pull upstream main`.
 
 ## Usage
 
