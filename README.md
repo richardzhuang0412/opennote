@@ -79,28 +79,31 @@ Or open Claude on your phone and just start talking.
 
 OpenNote ships with built-in skills for different types of capture:
 
+**You don't need to remember commands.** Just send your content naturally — AI detects your intent and routes it automatically:
+
+```bash
+n "the best frameworks feel invisible"           # → captured as a note
+n "what if we sold unused SaaS seats"             # → captured as an idea with next steps
+n "finish the API docs by Friday"                 # → captured as a todo
+n "what did I say about marketplaces?"            # → searches your notes
+n "delete that note about flossing"               # → finds and removes it (with confirmation)
+```
+
+Skills can also be invoked explicitly if you prefer:
+
 | Skill | What it does |
 |-------|-------------|
 | `/dump` | Ultra-fast raw capture — no formatting, no questions asked |
 | `/idea` | Structured idea with **Potential** and **Next Steps** sections |
-| `/reflect` | Periodic reflection that surfaces themes from recent notes |
 | `/todo` | Task capture with optional scheduled reminders |
-
-**From the CLI** — use `-p` to run a skill directly from your terminal:
+| `/reflect` | Periodic reflection that surfaces themes from recent notes |
+| `/search` | Find a half-remembered idea or note by keyword, theme, or date |
+| `/remove` | Delete a note that's outdated or no longer needed |
 
 ```bash
-claude -p "/dump the best ideas feel obvious in retrospect"
-claude -p "/idea a marketplace for unused SaaS seats"
-claude -p "/todo finish the API docs by Friday"
-claude -p "/reflect"
-```
-
-**Inside a Claude Code session** — just type the skill as a command:
-
-```
-claude> /dump quick thought about API design
-claude> /idea what if we flipped the pricing model
-claude> /reflect what have I been thinking about this week?
+n "/idea a daily email digest of your own notes"
+n "/todo remind me to call Alex in 30 minutes"
+n "/search that API thing from last week"
 ```
 
 ### Shell alias

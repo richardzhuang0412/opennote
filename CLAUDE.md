@@ -12,9 +12,30 @@ This is a **Personal Info Bank** — a simple, chronological repository for capt
 
 The user sends content via Claude Code. Claude's job is to:
 
-1. **Capture** the content into the correct file and directory
-2. **Commit** with a clear message
-3. **Push** to GitHub so everything stays synced
+1. **Detect intent** and route to the right behavior
+2. **Capture** the content into the correct file and directory
+3. **Commit** with a clear message
+4. **Push** to GitHub so everything stays synced
+
+## Auto-Routing
+
+The user should never need to type a skill name. When the user sends a message, detect their intent and apply the right behavior automatically:
+
+| Intent signal | Route to | Examples |
+|--------------|----------|----------|
+| A raw thought, quote, or fragment — no action needed | **dump** behavior | "Asymmetry is the whole game", "the best frameworks feel invisible" |
+| An idea with potential — something to build, try, or explore | **idea** behavior | "What if we did X", "a marketplace for unused SaaS seats" |
+| A task, action item, or something to do | **todo** behavior | "finish the API docs by Friday", "remind me to call Alex" |
+| Wants to reflect, review, or find patterns | **reflect** behavior | "what have I been thinking about?", "review my week" |
+| Looking for a previous note or trying to recall something | **search** behavior | "what did I say about APIs?", "find that idea about marketplaces" |
+| Wants to delete or discard a note | **remove** behavior | "delete that note about X", "remove the flossing reminder" |
+| A URL/link | **link** capture (see How to Save a Link) | `https://example.com/article` |
+| An image | **image** capture (see How to Save an Image) | *(attached image)* |
+| Wants to explore/synthesize across notes | **exploration** (see Explorations) | "brainstorm ideas from my notes this week" |
+
+**When ambiguous, default to dump** — it's better to capture fast than to over-categorize. The user can always reclassify later.
+
+Skills can still be invoked explicitly with `/dump`, `/idea`, `/todo`, `/reflect`, `/search`, `/remove` — but the user shouldn't need to.
 
 ## Directory Structure
 
@@ -156,7 +177,7 @@ When this happens:
 
 ## Commit Messages
 
-Format: `note: <brief summary>`, `idea: <brief summary>`, `todo: <brief summary>`, `reflect: <brief summary>`, or `explore: <brief summary>`
+Format: `note: <brief summary>`, `idea: <brief summary>`, `todo: <brief summary>`, `reflect: <brief summary>`, `remove: <brief summary>`, or `explore: <brief summary>`
 
 ## Purpose
 
