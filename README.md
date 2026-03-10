@@ -6,7 +6,7 @@
 
 *Your thoughts, compounded.*
 
-[Quick Start](#quick-start) · [How It Works](#how-it-works) · [Examples](#examples) · [Why Plain Files?](#why-plain-files)
+[Quick Start](#quick-start) · [Usage](#usage) · [How It Works](#how-it-works) · [Examples](#examples) · [Why Plain Files?](#why-plain-files)
 
 </div>
 
@@ -63,7 +63,11 @@ cd opennote
 ./setup.sh
 ```
 
-Start capturing:
+## Usage
+
+### Basic capture
+
+Just tell Claude what you want to remember:
 
 ```bash
 claude "Asymmetry is the whole game when the future is uncertain."
@@ -71,39 +75,53 @@ claude "Asymmetry is the whole game when the future is uncertain."
 
 Or open Claude on your phone and just start talking.
 
-## Capture from Anywhere
-
-Set up a shell alias for even faster capture:
-
-```bash
-# Add to your .bashrc or .zshrc
-alias n='claude --allowedTools "" -p'
-```
-
-Then capture from anywhere:
-
-```bash
-n "the best ideas feel obvious in retrospect"
-```
-
 ### Skills
 
 OpenNote ships with built-in skills for different types of capture:
 
-| Command | What it does |
-|---------|-------------|
-| `/dump` | Ultra-fast raw capture — no formatting, no questions |
-| `/idea` | Structured idea with Potential and Next Steps sections |
+| Skill | What it does |
+|-------|-------------|
+| `/dump` | Ultra-fast raw capture — no formatting, no questions asked |
+| `/idea` | Structured idea with **Potential** and **Next Steps** sections |
 | `/reflect` | Periodic reflection that surfaces themes from recent notes |
 | `/todo` | Task capture with optional scheduled reminders |
 
-Use them inside Claude Code:
+**From the CLI** — use `-p` to run a skill directly from your terminal:
+
+```bash
+claude -p "/dump the best ideas feel obvious in retrospect"
+claude -p "/idea a marketplace for unused SaaS seats"
+claude -p "/todo finish the API docs by Friday"
+claude -p "/reflect"
+```
+
+**Inside a Claude Code session** — just type the skill as a command:
 
 ```
-claude> /idea a marketplace for unused SaaS seats
-claude> /todo finish the API docs by Friday
+claude> /dump quick thought about API design
+claude> /idea what if we flipped the pricing model
 claude> /reflect what have I been thinking about this week?
 ```
+
+### Shell alias
+
+For even faster capture, add an alias to your `.bashrc` or `.zshrc`:
+
+```bash
+alias n='cd ~/opennote && claude -p'
+```
+
+Then:
+
+```bash
+n "/dump always bet on simplicity"
+n "/idea a daily email digest of your own notes"
+n "meeting with Alex — discussed launch timeline, agreed on March 20"
+```
+
+### Zero permission prompts
+
+OpenNote includes repo-level permissions (`.claude/settings.json`) so standard capture operations — reading, writing notes, git commit/push — run without any approval prompts. Just send and go.
 
 ## How It Works
 
@@ -115,7 +133,7 @@ You (phone or desktop)          ← the only thing you do
         → GitHub (synced)
 ```
 
-Send a message. That's it. No manual filing, no tagging, no folder management.
+No manual filing, no tagging, no folder management.
 
 ## Examples
 
