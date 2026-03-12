@@ -15,6 +15,7 @@
       "Bash(git diff *)",
       "Bash(gh repo *)",
       "Bash(ls *)",
+      "Bash(rm notes/*)",
       "WebFetch"
     ]
   }

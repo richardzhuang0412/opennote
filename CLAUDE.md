@@ -35,7 +35,56 @@ The user should never need to type a skill name. When the user sends a message, 
 
 **When ambiguous, default to dump** — it's better to capture fast than to over-categorize. The user can always reclassify later.
 
-Skills can still be invoked explicitly with `/dump`, `/idea`, `/todo`, `/reflect`, `/search`, `/remove` — but the user shouldn't need to.
+## Performance
+
+- **Single Bash call**: combine file write + git add + commit + push into one shell command to minimize round-trips
+- **Background push**: use `git push &` so the user isn't waiting on network
+- **Minimal output**: confirm briefly ("Captured: <title>"), don't narrate what you did
+
+## Behavior Rules
+
+Each intent overrides the base note format as follows:
+
+### Dump
+- `type: note`
+- No embellishment — preserve the user's exact wording
+- One-sentence summary in frontmatter
+- Don't ask questions, just capture
+
+### Idea
+- `type: idea`
+- Add `## Potential` section (2-3 bullets on why this could matter)
+- Add `## Next Steps` section (2-3 concrete actions to explore further)
+
+### Todo
+- `type: todo`
+- Add frontmatter fields: `priority` (high/medium/low), `deadline` (if mentioned), `status: open`
+- If a deadline or reminder time is mentioned, offer to set a macOS reminder using osascript:
+  ```bash
+  osascript <<'APPLESCRIPT'
+  tell application "Reminders"
+    set newReminder to make new reminder in default list with properties {name:"<task>", due date:date "<date string>"}
+  end tell
+  APPLESCRIPT
+  ```
+- **Terminal-mode warning**: osascript reminders only work when Claude Code is running in a full terminal (not in mobile/one-shot mode). If in one-shot mode (`-p` flag), skip the reminder and note this in the output.
+
+### Reflect
+- `type: reflection`
+- Before writing, scan recent notes (last 7 days by default) by reading frontmatter summaries
+- Add `## Themes` section — recurring patterns or threads
+- Add `## References` section — list the specific notes that informed this reflection
+
+### Search
+- **Read-only** — don't create any files
+- Search by: filenames, content (grep), and `type` field in frontmatter
+- Show top results with their summaries from frontmatter
+- If no matches, say so briefly
+
+### Remove
+- In interactive mode: confirm before deleting ("Delete notes/2026-03-09_example.md?")
+- In one-shot mode (`-p` flag): auto-delete if there's exactly one match, confirm if multiple
+- If the user provides an exact filename: delete directly without searching
 
 ## Directory Structure
 
